@@ -205,7 +205,85 @@ def build_funnel(html):
 EXTRACTORS = [
     ("FLAGING (KPI master)", embed_flaging),
     ("SALES FUNNEL (Mytens)", build_funnel),
+    ("CT-0 / New Loss", None),  # diisi setelah definisi build_ct0 (lihat bawah)
 ]
+
+# ================================================================
+# SUMBER 3 — CT-0 / NEW LOSS  ->  __CT0__
+# Menggerakkan tab: Analisis CT-0.
+# Sumber: data/03_ct0/T_NAL_Full_Data_data.csv  (UTF-16, tab-delimited)
+# ================================================================
+def _ct0_channel(c):
+    u = ("" if (c is None or isinstance(c, float)) else str(c)).strip().upper()
+    if u in ("MYIB_ASSISTANT", "MYDIGIBIZPARTNER", "MYINDIBIZ"): return "Aplikasi"
+    if u == "ACCOUNT MANAGER": return "Account Manager"
+    if u == "CUSTOMER CARE": return "Customer Care"
+    if u == "PLASA": return "Plasa"
+    if "SALES FORCE" in u or "PROFESIONAL" in u or "PROFESSIONAL" in u or u == "TAM": return "Sales Force"
+    if "PARTNER" in u: return "Partner"
+    return "Blank / Digipro"
+
+def _ct0_produk(p):
+    u = ("" if (p is None or isinstance(p, float)) else str(p)).upper()
+    return "WMS" if ("WMS" in u or "MANAGE" in u or "WIFI" in u) else "HSI/Internet"
+
+def build_ct0(html):
+    import pandas as pd, re as _re
+    f = latest("03_ct0", "T_NAL*.csv") or latest("03_ct0", "*.csv")
+    if not f:
+        print("  [lewati] tidak ada CSV di data/03_ct0/ — __CT0__ dipertahankan")
+        return html
+    df = pd.read_csv(f, encoding="utf-16", sep="\t", dtype=str, on_bad_lines="skip")
+    df.columns = [c.strip() for c in df.columns]
+    for c in ["SSL_CT0", "SSL_DO", "SSL_AO"]:
+        df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0).astype(int)
+    df["PERIODE"] = df["PERIODE"].astype(str).str[:6]
+    if "TWITEL" in df.columns:
+        df = df[df["TWITEL"].astype(str).str.upper().str.contains("SUMALUT", na=False)]
+    S = lambda x: "" if pd.isna(x) else str(x)
+    UMUR = ["<6 bln", "6-12 bln", "1-2 thn", "2-3 thn", "3-4 thn", "4-5 thn", ">5 thn", "Unidentified"]
+    periods = sorted([p for p in df["PERIODE"].unique() if _re.match(r"^20\d{4}$", p)])
+
+    def agg(sub):
+        c0 = sub[sub.SSL_CT0 == 1]
+        telda = []
+        for k, g in sub.groupby(sub["TELKOM_DAERAH"].map(S)):
+            if not k: continue
+            telda.append({"k": k, "ct0": int(g.SSL_CT0.sum()), "do": int(g.SSL_DO.sum()), "ao": int(g.SSL_AO.sum())})
+        telda.sort(key=lambda x: -x["ct0"])
+        def gv(series):
+            d = {}
+            for v in series: d[v] = d.get(v, 0) + 1
+            return sorted(d.items(), key=lambda x: -x[1])
+        channel = [{"k": k, "v": v} for k, v in gv(c0["CHANNEL"].map(_ct0_channel))]
+        produk  = [{"k": k, "v": v} for k, v in gv(c0["PRODUK"].map(_ct0_produk))]
+        ekosis  = [{"k": k, "v": v} for k, v in gv(c0["EKOSISTEM"].map(lambda x: S(x).strip() or "(blank)"))]
+        stos = gv(c0["STO"].map(lambda x: S(x).strip() or "(blank)"))
+        top, rest = stos[:12], sum(v for _, v in stos[12:])
+        sto = [{"k": k, "v": v} for k, v in top] + ([{"k": "Lainnya", "v": rest}] if rest > 0 else [])
+        umur = []
+        for band in UMUR:
+            g = sub[sub["UMUR_PLG"].map(lambda x: S(x).strip()) == band]
+            if len(g): umur.append({"k": band, "ct0": int(g.SSL_CT0.sum()), "do": int(g.SSL_DO.sum())})
+        return {"ct0": int(sub.SSL_CT0.sum()), "do": int(sub.SSL_DO.sum()), "ao": int(sub.SSL_AO.sum()),
+                "telda": telda, "channel": channel, "umur": umur, "produk": produk, "ekosistem": ekosis, "sto": sto}
+
+    perPeriod = {p: agg(df[df["PERIODE"] == p]) for p in periods}
+    perPeriod["ALL"] = agg(df)
+    trend = [{"p": p, "ct0": perPeriod[p]["ct0"], "do": perPeriod[p]["do"], "ao": perPeriod[p]["ao"]} for p in periods]
+    withct0 = [p for p in periods if perPeriod[p]["ct0"] > 0]
+    latest_p = withct0[-1] if withct0 else (periods[-1] if periods else "")
+    obj = {"periods": periods, "latest": latest_p, "trend": trend, "perPeriod": perPeriod,
+           "totCt0": perPeriod["ALL"]["ct0"], "totDo": perPeriod["ALL"]["do"], "totAo": perPeriod["ALL"]["ao"],
+           "incomplete": [p for p in periods if p > latest_p]}
+    html, ok = replace_json(html, "__CT0__", obj)
+    print(f"  [OK]  __CT0__  <- {os.path.basename(f)}  (CT0 {obj['totCt0']} / DO {obj['totDo']} / AO {obj['totAo']}, {len(periods)} periode)")
+    return html
+
+# daftarkan build_ct0 pada slot yang sudah disiapkan
+for _i, _e in enumerate(EXTRACTORS):
+    if _e[1] is None and _e[0].startswith("CT-0"):
+        EXTRACTORS[_i] = ("CT-0 / New Loss", build_ct0)
 
 def main():
     if not os.path.exists(INDEX):

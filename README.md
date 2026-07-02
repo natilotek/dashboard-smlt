@@ -69,7 +69,8 @@ Ada **3 cara** memicu update — pilih yang paling nyaman:
 |---|---|---|---|
 | `01_flaging/` | `__XLSX_B64__` | **Witel, TelDa, Potret, Ranking, Weekly**, + angka KPI Rising Star | ✅ Otomatis |
 | `02_funnel/` (TREG5_SALES_FUNNEL) | `__FUNNEL__`, `__MYAGG__` | **Funneling** (Mytens LOP) + CvR F5/F0 + Kecukupan LOP | ✅ Otomatis |
-| lainnya | `__CT0__`, `__COLLECTION__`, `__AOSODOMORO__`, `__EDK__`, `__FN_SPH__`, `__BL2025__`, dst | CT-0, Collection, AOSODOMORO, EDK, Funnel SPH, Rising Star (komputasi) | ⏳ Pakai data terakhir sampai extractor ditambahkan |
+| `03_ct0/` (T_NAL CSV) | `__CT0__` | **Analisis CT-0** | ✅ Otomatis |
+| lainnya | `__COLLECTION__`, `__AOSODOMORO__`, `__EDK__`, `__FN_SPH__`, `__BL2025__`, dst | CT-0, Collection, AOSODOMORO, EDK, Funnel SPH, Rising Star (komputasi) | ⏳ Pakai data terakhir sampai extractor ditambahkan |
 
 **Catatan konsistensi:** saat file flaging baru masuk, tab berbasis flaging langsung ikut berubah.
 Tab yang masih ⏳ (mis. CT-0, Collection, Rising Star) tetap memakai angka terakhir sampai
