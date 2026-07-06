@@ -472,6 +472,7 @@ table.hm-t tr.aggr td{outline:2px solid #BFD3FB;outline-offset:-2px}
       <button class="tab" data-tab="edk"><span class="tnum">▦</span> EDK Kontrak <span style="font-weight:500;color:var(--muted)">· end date · outstanding</span></button>
       <button class="tab" data-tab="ct0"><span class="tnum">⚠</span> Analisis CT-0 <span style="font-weight:500;color:var(--muted)">· New Loss · trend &amp; penyebab</span></button>
       <button class="tab" data-tab="rstar"><span class="tnum">★</span> Rising Star <span style="font-weight:500;color:var(--muted)">· Bintang 3–11</span></button>
+      <button class="tab" data-tab="digipro"><span class="tnum">◈</span> Digital Product <span style="font-weight:500;color:var(--muted)">· OCA · Netmonk · Antares · Pijar · Bigbox</span></button>
     </div>
 
     <!-- Controls -->
@@ -749,7 +750,7 @@ function syncControls(){
   }else if(S.tab==="rank"){
     unitField.style.display="none";indField.style.display="none";entityField.classList.add("hidden");entityField.style.display="none";
     targetField.style.display="flex";
-  }else if(S.tab==="gs"||S.tab==="smes"||S.tab==="dps"||S.tab==="dss"||S.tab==="collection"||S.tab==="amquad"||S.tab==="aoso"||S.tab==="edk"||S.tab==="ct0"||S.tab==="rstar"){
+  }else if(S.tab==="gs"||S.tab==="smes"||S.tab==="dps"||S.tab==="dss"||S.tab==="collection"||S.tab==="amquad"||S.tab==="aoso"||S.tab==="edk"||S.tab==="ct0"||S.tab==="rstar"||S.tab==="digipro"){
     unitField.style.display="none";indField.style.display="none";entityField.classList.add("hidden");entityField.style.display="none";
     targetField.style.display="none";
   }else if(S.tab==="weekly"||S.tab==="funnel"){
@@ -3267,7 +3268,99 @@ function renderFunnelSPH(){
   view.querySelectorAll(".fn-srcb").forEach(b=>b.onclick=()=>{S.fnSrc=b.dataset.src;S.fnSlice="all";render();});
   view.querySelectorAll(".fn-swb").forEach(b=>b.onclick=()=>{S.fnCvrMode=b.dataset.cvr;render();});
 }
-function render(){syncControls();if(S.tab==="witel")renderWitel();else if(S.tab==="telda")renderTelda();else if(S.tab==="potret")renderPotret();else if(S.tab==="rank")renderRank();else if(S.tab==="gs")renderGS();else if(S.tab==="dps")renderDPS();else if(S.tab==="dss")renderDSS();else if(S.tab==="collection")renderCollection();else if(S.tab==="amquad")renderAMQuad();else if(S.tab==="weekly")renderWeekly();else if(S.tab==="funnel")renderFunnel();else if(S.tab==="aoso")renderAoso();else if(S.tab==="edk")renderEdk();else if(S.tab==="ct0")renderCt0();else if(S.tab==="rstar")renderRisingStar();else renderSMES();}
+/* ---------------- Digital Product (DIGIPRO) ---------------- */
+const DG_GROUPS=[
+ ["Revenue Digital — SMES",["Revenue OCA SMES","Revenue Netmonk SMES","Revenue Antares Eazy SMES","Revenue Pijar Sekolah SMES","Revenue Padi UMKM SMES"],"rp"],
+ ["Sales Digital Product",["Sales OCA","Sales Netmonk","Sales Antares Eazy","Sales Pijar Sekolah","Sales Bigbox"],"n"],
+ ["Revenue Digital — Government",["Revenue Antares Eazy Gov","Revenue Bigbox Gov","Revenue Netmonk Gov","Revenue OCA Gov"],"rp"],
+ ["Revenue Digital — Private (PS)",["Revenue Antares Eazy PS","Revenue Netmonk PS","Revenue OCA PS","Revenue Bigbox PS"],"rp"],
+ ["Revenue Digital — SOE",["Revenue Antares Eazy SoE","Revenue Netmonk SoE","Revenue OCA SoE","Revenue Bigbox SoE","Revenue Padi UMKM SoE"],"rp"]];
+const DGM=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+const DG_COLS=["#0e7490","#b91c1c","#7c3aed","#15803d","#b45309"];
+function dgMap(){const m={};(S.witel||[]).forEach(r=>{if(String(r.unit).trim().toUpperCase()==="DIGIPRO"&&/umalut/i.test(r.ut||""))m[r.ind.trim().toLowerCase()]=r;});return m;}
+function dgShort(v){if(v==null)return"–";const a=Math.abs(v);if(a>=1e9)return (v/1e9).toLocaleString("id-ID",{maximumFractionDigits:1})+" M";if(a>=1e6)return (v/1e6).toLocaleString("id-ID",{maximumFractionDigits:1})+" jt";if(a>=1e3)return (v/1e3).toLocaleString("id-ID",{maximumFractionDigits:0})+" rb";return String(Math.round(v));}
+function dgFmt(v,u){return v==null?"–":(u==="rp"?rp(v):Number(v).toLocaleString("id-ID"));}
+function dgAchTxt(t,r){if(!t)return '<span class="cl-ach" style="color:var(--muted)" title="target 0/kosong — ACH tidak dihitung">–</span>';const a=(r||0)/t;if(a>=10)return `<span class="cl-ach cl-a" title="${(a*100).toFixed(0)}% — target sangat kecil, tidak representatif">≥999%</span>`;const cls=a>=1?"cl-g":a>=0.8?"cl-a":"cl-r";return `<span class="cl-ach ${cls}">${(a*100).toFixed(1)}%</span>`;}
+function dgChart(items,u,li){
+  const n=li+1;if(n<2||!items.length)return"";
+  const W=760,H=280,pl=56,pr=170,pt=16,pb=40,pw=W-pl-pr,ph=H-pt-pb;
+  const flat=[].concat(...items.map(s=>s.vals.slice(0,n).filter(v=>v!=null)));
+  if(!flat.length)return"";
+  let mx=Math.max(...flat),mn=Math.min(...flat,0);if(mx===mn)mx=mn+1;
+  const x=i=>pl+(i/(n-1))*pw,y=v=>pt+(mx-v)/(mx-mn)*ph;
+  let grid="";for(let g=0;g<=4;g++){const vv=mn+(mx-mn)*g/4,yy=pt+ph-g/4*ph;grid+=`<line x1="${pl}" y1="${yy.toFixed(1)}" x2="${pl+pw}" y2="${yy.toFixed(1)}" stroke="#eef2f7"/><text x="${pl-5}" y="${(yy+3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="#94a3b8">${u==="rp"?dgShort(vv):vv.toFixed(0)}</text>`;}
+  const mlab=DGM.slice(0,n).map((m,i)=>`<text x="${x(i).toFixed(1)}" y="${H-24}" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">${m}</text>`).join("");
+  const ends=items.map((s,k)=>({k,y:y(s.vals[li]!=null?s.vals[li]:mn)})).sort((a,b)=>a.y-b.y);
+  let prev=-99;ends.forEach(e=>{e.ly=Math.max(e.y,prev+11);prev=e.ly;});
+  const lyMap={};ends.forEach(e=>{lyMap[e.k]=e.ly;});
+  const lines=items.map((s,k)=>{
+    const pts=s.vals.slice(0,n).map((v,i)=>v==null?null:x(i).toFixed(1)+","+y(v).toFixed(1)).filter(Boolean).join(" ");
+    const lv=s.vals[li];const nm=s.name.replace(/^(Revenue|Sales)\s+/,"");
+    const endLab=lv!=null?`<text x="${(pl+pw+6).toFixed(1)}" y="${(lyMap[k]+3).toFixed(1)}" font-size="9" font-weight="700" fill="${s.col}">${esc(nm)} ${u==="rp"?dgShort(lv):Number(lv).toLocaleString("id-ID")}</text>`:"";
+    return `<polyline points="${pts}" fill="none" stroke="${s.col}" stroke-width="2.2"/>`+s.vals.slice(0,n).map((v,i)=>v==null?"":`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.8" fill="${s.col}"/>`).join("")+endLab;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">${grid}${lines}${mlab}</svg>`;
+}
+function renderDigipro(){
+  const M=dgMap();
+  const get=n=>M[n.toLowerCase()];
+  const li=Math.min(S.maxIdx==null?11:S.maxIdx,11);
+  const mlab=MFULL[MONTHS[li]]+" 2026";
+  const allNames=[].concat(...DG_GROUPS.map(g=>g[1]));
+  const missing=allNames.filter(n=>!get(n));
+  const revRows=allNames.filter(n=>/^Revenue/i.test(n)&&get(n)).map(get);
+  const slsRows=allNames.filter(n=>/^Sales/i.test(n)&&get(n)).map(get);
+  const sum=(rows,f)=>rows.reduce((s,r)=>s+(f(r)||0),0);
+  const tRev=sum(revRows,r=>r.tgt[li]),rRev=sum(revRows,r=>r.rls[li]);
+  const tSls=sum(slsRows,r=>r.tgt[li]),rSls=sum(slsRows,r=>r.rls[li]);
+  const perf=allNames.filter(n=>get(n)).map(n=>{const r=get(n);const t=r.tgt[li];return {n,a:t?(r.rls[li]||0)/t:null};}).filter(o=>o.a!=null);
+  perf.sort((a,b)=>b.a-a.a);
+  const zero=allNames.filter(n=>{const r=get(n);return r&&(r.rls[li]||0)===0&&(r.tgt[li]||0)>0;});
+  const kpi=(lab,v,sub,tone)=>`<div class="cl-kpi"><div class="cl-kl">${lab}</div><div class="cl-kv" style="font-size:19px">${v}</div><div class="cl-ks" style="color:${tone||'var(--muted)'}">${sub}</div></div>`;
+  const kpis=`<div class="cl-kpis">`+
+    kpi("Total Revenue Digital (YtD)",rp(rRev),`Target ${rp(tRev)} · ACH ${tRev?((rRev/tRev*100).toFixed(1)+"%"):"–"}`,tRev&&rRev/tRev>=1?"#15803D":"#C0392B")+
+    kpi("Gap Revenue ke Target",(rRev-tRev>=0?"+":"−")+rp(Math.abs(rRev-tRev)),"Realisasi − Target (YtD)",rRev-tRev>=0?"#15803D":"#C0392B")+
+    kpi("Total Sales Digital (YtD)",Number(rSls).toLocaleString("id-ID"),`Target ${Number(tSls).toLocaleString("id-ID")} · ACH ${tSls?((rSls/tSls*100).toFixed(1)+"%"):"–"}`,tSls&&rSls/tSls>=1?"#15803D":"#C0392B")+
+    kpi("ACH Tertinggi",perf.length?perf[0].n.replace(/^(Revenue|Sales)\s+/,""):"–",perf.length?(perf[0].a*100).toFixed(1)+"%":"","#15803D")+
+    kpi("Posisi Data",mlab,"YtD kumulatif · sumber flaging")+
+  `</div>`;
+  const groupBlocks=DG_GROUPS.map(([title,names,u])=>{
+    const rows=names.filter(n=>get(n)).map((n,i)=>{const r=get(n);const mv=r.rls.map((v,j)=>(r.rlsm&&r.rlsm[j]!=null)?r.rlsm[j]:(v!=null?v-(j>0?(r.rls[j-1]||0):0):null));return {name:n,col:DG_COLS[i%DG_COLS.length],vals:r.rls,mv,tgt:r.tgt};});
+    if(!rows.length)return"";
+    const chart=dgChart(rows.map(o=>({name:o.name,col:o.col,vals:o.mv})),u,li);
+    const sortedRows=rows.slice().sort((a,b)=>{const aa=a.tgt[li]?(a.vals[li]||0)/a.tgt[li]:-1,bb=b.tgt[li]?(b.vals[li]||0)/b.tgt[li]:-1;return bb-aa;});
+    const trs=sortedRows.map(o=>{const t=o.tgt[li],r=o.vals[li],gap=(r||0)-(t||0);
+      return `<tr><td><b style="color:${o.col}">${esc(o.name.replace(/^(Revenue|Sales)\s+/,""))}</b></td><td class="num" style="color:var(--muted)">${dgFmt(t,u)}</td><td class="num" style="font-weight:700">${dgFmt(r,u)}</td><td class="num">${dgAchTxt(t,r)}</td><td class="num" style="color:${gap>=0?'#15803D':'#C0392B'};font-weight:700">${gap>=0?'+':'−'}${dgFmt(Math.abs(gap),u)}</td></tr>`;}).join("");
+    const tT=rows.reduce((s,o)=>s+(o.tgt[li]||0),0),tR=rows.reduce((s,o)=>s+(o.vals[li]||0),0),tG=tR-tT;
+    const tot=`<tr style="border-top:2px solid var(--line);font-weight:800"><td>TOTAL</td><td class="num" style="color:var(--muted)">${dgFmt(tT,u)}</td><td class="num">${dgFmt(tR,u)}</td><td class="num">${dgAchTxt(tT,tR)}</td><td class="num" style="color:${tG>=0?'#15803D':'#C0392B'}">${tG>=0?'+':'−'}${dgFmt(Math.abs(tG),u)}</td></tr>`;
+    return `<div class="cl-card"><div class="cl-ch">${title} · Tren Bulanan (MTD) Jan–${DGM[li]} &amp; Posisi YtD ${mlab}</div><div class="cl-grid2"><div>${chart}</div><div><table class="cl-t"><thead><tr><th>Produk</th><th class="num">Target</th><th class="num">Realisasi</th><th class="num">ACH</th><th class="num">Gap</th></tr></thead><tbody>${trs}${tot}</tbody></table></div></div></div>`;
+  }).join("");
+  // drill-down bulanan per indikator
+  S.dgSel=S.dgSel&&get(S.dgSel)?S.dgSel:allNames.find(n=>get(n));
+  const dr=get(S.dgSel);const uSel=/^Sales/i.test(S.dgSel)?"n":"rp";
+  const opt=allNames.filter(n=>get(n)).map(n=>`<option value="${esc(n)}"${n===S.dgSel?" selected":""}>${esc(n)}</option>`).join("");
+  let drill="";
+  if(dr){
+    const rowsM=[];
+    for(let i=0;i<=li;i++){
+      const t=dr.tgt[i],r=dr.rls[i];if(t==null&&r==null)continue;
+      const mtd=(dr.rlsm&&dr.rlsm[i]!=null)?dr.rlsm[i]:(r!=null?(r-(i>0?(dr.rls[i-1]||0):0)):null);
+      const gap=(r||0)-(t||0);
+      rowsM.push(`<tr><td>${MFULL[MONTHS[i]]}</td><td class="num" style="color:var(--muted)">${dgFmt(t,uSel)}</td><td class="num" style="font-weight:700">${dgFmt(r,uSel)}</td><td class="num">${dgAchTxt(t,r)}</td><td class="num" style="color:${gap>=0?'#15803D':'#C0392B'};font-weight:700">${gap>=0?'+':'−'}${dgFmt(Math.abs(gap),uSel)}</td><td class="num">${dgFmt(mtd,uSel)}</td></tr>`);
+    }
+    drill=`<div class="cl-card"><div class="cl-ch">Detail Bulanan per Indikator · Target → Realisasi → ACH → Gap</div><div class="cl-seg-sel" style="margin-bottom:10px"><label style="font-size:11px;font-weight:700;color:var(--muted);margin-right:8px">INDIKATOR</label><select id="dgSel">${opt}</select></div><table class="cl-t"><thead><tr><th>Bulan</th><th class="num">Target (YtD)</th><th class="num">Realisasi (YtD)</th><th class="num">ACH</th><th class="num">Gap</th><th class="num">Penambahan (MTD)</th></tr></thead><tbody>${rowsM.join("")}</tbody></table><div class="cl-note">YtD = kumulatif sejak Januari. Penambahan (MTD) = pergerakan bulan tsb (dari kolom MTD flaging; bila kosong dihitung dari selisih YtD).</div></div>`;
+  }
+  const ins=[];
+  if(tRev)ins.push(`Total revenue Digital Product SUMALUT ${mlab}: <b>${rp(rRev)}</b> dari target ${rp(tRev)} (ACH ${(rRev/tRev*100).toFixed(1)}%, gap ${rp(Math.abs(rRev-tRev))}).`);
+  if(perf.length)ins.push(`ACH tertinggi: <b>${perf[0].n}</b> (${(perf[0].a*100).toFixed(1)}%); terendah: <b>${perf[perf.length-1].n}</b> (${(perf[perf.length-1].a*100).toFixed(1)}%).`);
+  if(zero.length)ins.push(`Belum ada realisasi sama sekali (target ada): ${zero.map(z=>z.replace(/^(Revenue|Sales)\s+/,"")).join(", ")} — perlu dorongan penjualan/aktivasi.`);
+  if(missing.length)ins.push(`Indikator tidak ditemukan di flaging: ${missing.join(", ")}.`);
+  const insight=ins.length?`<div class="cl-card cl-ins"><div class="cl-ch">Catatan &amp; Insight — Digital Product</div><ul class="cl-ul">${ins.map(p=>`<li>${p}</li>`).join("")}</ul></div>`:"";
+  view.innerHTML=COLL_CSS+`<div class="cl-wrap"><div class="cl-head"><h1>Digital Product — Witel SUMALUT</h1><div class="cl-sub">OCA · Netmonk · Antares Eazy · Pijar Sekolah · Bigbox · Padi UMKM — revenue per segmen &amp; sales · posisi ${mlab} (YtD) · sumber flaging DIGIPRO</div></div>${kpis}${groupBlocks}${drill}${insight}<div class="cl-note">Format tabel: Target → Realisasi → ACH → Gap. ACH = Realisasi ÷ Target; Gap = Realisasi − Target (positif hijau = di atas target). Grafik = tren bulanan/MTD (penambahan tiap bulan, dari kolom MTD flaging; bila kosong dihitung dari selisih YtD) — bukan kumulatif. Tabel = posisi YtD. Tabel diurutkan ACH tertinggi.</div></div>`;
+  const sel=$("dgSel");if(sel)sel.onchange=e=>{S.dgSel=e.target.value;render();};
+}
+
+function render(){syncControls();if(S.tab==="witel")renderWitel();else if(S.tab==="telda")renderTelda();else if(S.tab==="potret")renderPotret();else if(S.tab==="rank")renderRank();else if(S.tab==="gs")renderGS();else if(S.tab==="dps")renderDPS();else if(S.tab==="dss")renderDSS();else if(S.tab==="collection")renderCollection();else if(S.tab==="amquad")renderAMQuad();else if(S.tab==="weekly")renderWeekly();else if(S.tab==="funnel")renderFunnel();else if(S.tab==="aoso")renderAoso();else if(S.tab==="edk")renderEdk();else if(S.tab==="ct0")renderCt0();else if(S.tab==="rstar")renderRisingStar();else if(S.tab==="digipro")renderDigipro();else renderSMES();}
 
 /* ---------------- file loading ---------------- */
 function applyWorkbook(wb,name,time,srcUrl){
