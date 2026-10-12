@@ -452,7 +452,7 @@ table.hm-t tr.aggr td{outline:2px solid #BFD3FB;outline-offset:-2px}
       </div>
     </div>
     <div class="top-right">
-      <div id="periodPill" class="period-pill hidden"><span class="dot"></span><span>Periode data s.d. <b id="periodTxt">–</b></span></div>
+      <div id="updPill" class="period-pill" title="Waktu pembaruan terakhir index.html (lihat tab Changelog)"><span class="dot" style="background:#16a34a"></span><span>Update terakhir: <b id="updTxt">–</b></span></div><div id="periodPill" class="period-pill hidden"><span class="dot"></span><span>Periode data s.d. <b id="periodTxt">–</b></span></div>
       <button id="reloadBtn" class="btn btn-ghost hidden" title="Pilih satu atau beberapa file terbaru (FLAGING 2026 / REV DGS / Template RKAP) → bagian terkait diperbarui & file index.html baru terunduh untuk diunggah ke GitHub">⤓ Perbarui &amp; unduh</button>
       <input type="file" id="fileInput" accept=".xlsx,.xlsm,.xls" multiple class="hidden">
       <input type="file" id="updateInput" accept=".xlsx,.xlsm,.xls" multiple class="hidden">
@@ -492,7 +492,7 @@ table.hm-t tr.aggr td{outline:2px solid #BFD3FB;outline-offset:-2px}
 
   <!-- Dashboard -->
   <div id="dash" class="hidden">
-    <div class="tabs"><button class="tab active" data-tab="witel"><span class="tnum">1</span> Ringkasan</button><button class="tab" data-tab="weekly"><span class="tnum">2</span> Weekly Review</button><button class="tab" data-tab="kontrak"><span class="tnum">3</span> Review Kontrak</button><button class="tab" data-tab="collection"><span class="tnum">4</span> Collection</button><button class="tab" data-tab="remopsu"><span class="tnum">5</span> Reminder Sulut</button><button class="tab" data-tab="remopmu"><span class="tnum">6</span> Reminder Malut</button><button class="tab" data-tab="remopmk"><span class="tnum">7</span> Reminder Maluku</button><button class="tab" data-tab="remopall"><span class="tnum">8</span> Reminder All</button><button class="tab" data-tab="telda"><span class="tnum">9</span> TelDa</button><button class="tab" data-tab="potret"><span class="tnum">10</span> Potret KPI</button><button class="tab" data-tab="rank"><span class="tnum">11</span> Ranking TelDa</button><button class="tab" data-tab="prognosa"><span class="tnum">12</span> Prognosa Revenue</button><button class="tab" data-tab="funnel"><span class="tnum">13</span> Funneling LOP</button><button class="tab" data-tab="winedu"><span class="tnum">14</span> Winning Education</button><button class="tab" data-tab="segprof"><span class="tnum">15</span> Profil Segmen</button><button class="tab" data-tab="digipro"><span class="tnum">16</span> Digital Product</button><button class="tab" data-tab="amquad"><span class="tnum">17</span> Kuadran AM</button><button class="tab" data-tab="rstar"><span class="tnum">18</span> Rising Star</button><button class="tab" data-tab="aoso"><span class="tnum">19</span> AOSODOMORO</button><button class="tab" data-tab="ct0"><span class="tnum">20</span> Analisis CT-0</button><button class="tab" data-tab="edk"><span class="tnum">21</span> EDK</button><button class="tab" data-tab="km"><span class="tnum">22</span> KM 2026</button><button class="tab" data-tab="custshow"><span class="tnum">23</span> Profil per Customer</button><button class="tab" data-tab="amshow"><span class="tnum">24</span> Slideshow AM</button><button class="tab" data-tab="custa"><span class="tnum">25</span> Customer Analysis</button><button class="tab" data-tab="wmsv"><span class="tnum">26</span> WMS Voucher</button><button class="tab" data-tab="dashlain"><span class="tnum">27</span> Dashboard Unit</button></div>
+    <div class="tabs"><button class="tab active" data-tab="witel"><span class="tnum">1</span> Ringkasan</button><button class="tab" data-tab="weekly"><span class="tnum">2</span> Weekly Review</button><button class="tab" data-tab="kontrak"><span class="tnum">3</span> Review Kontrak</button><button class="tab" data-tab="collection"><span class="tnum">4</span> Collection</button><button class="tab" data-tab="remopsu"><span class="tnum">5</span> Reminder Sulut</button><button class="tab" data-tab="remopmu"><span class="tnum">6</span> Reminder Malut</button><button class="tab" data-tab="remopmk"><span class="tnum">7</span> Reminder Maluku</button><button class="tab" data-tab="remopall"><span class="tnum">8</span> Reminder All</button><button class="tab" data-tab="telda"><span class="tnum">9</span> TelDa</button><button class="tab" data-tab="potret"><span class="tnum">10</span> Potret KPI</button><button class="tab" data-tab="rank"><span class="tnum">11</span> Ranking TelDa</button><button class="tab" data-tab="prognosa"><span class="tnum">12</span> Prognosa Revenue</button><button class="tab" data-tab="funnel"><span class="tnum">13</span> Funneling LOP</button><button class="tab" data-tab="winedu"><span class="tnum">14</span> Winning Education</button><button class="tab" data-tab="segprof"><span class="tnum">15</span> Profil Segmen</button><button class="tab" data-tab="digipro"><span class="tnum">16</span> Digital Product</button><button class="tab" data-tab="amquad"><span class="tnum">17</span> Kuadran AM</button><button class="tab" data-tab="rstar"><span class="tnum">18</span> Rising Star</button><button class="tab" data-tab="aoso"><span class="tnum">19</span> AOSODOMORO</button><button class="tab" data-tab="ct0"><span class="tnum">20</span> Analisis CT-0</button><button class="tab" data-tab="edk"><span class="tnum">21</span> EDK</button><button class="tab" data-tab="km"><span class="tnum">22</span> KM 2026</button><button class="tab" data-tab="custshow"><span class="tnum">23</span> Profil per Customer</button><button class="tab" data-tab="amshow"><span class="tnum">24</span> Slideshow AM</button><button class="tab" data-tab="custa"><span class="tnum">25</span> Customer Analysis</button><button class="tab" data-tab="wmsv"><span class="tnum">26</span> WMS Voucher</button><button class="tab" data-tab="dashlain"><span class="tnum">27</span> Dashboard Unit</button><button class="tab" data-tab="changelog"><span class="tnum">28</span> Changelog</button></div>
 
     <!-- Controls -->
     <div class="controls">
@@ -12578,6 +12578,47 @@ view.innerHTML='<div class="panel"><div class="panel-b"><div style="font-weight:
 if(S.tab!=="dashlain")return _render.apply(this,arguments);
 try{if(typeof remopStop==="function")remopStop();if(typeof amShowStop==="function")amShowStop();if(typeof custShowStop==="function")custShowStop();}catch(e){}
 renderDashLain();
+  };
+})();
+</script>
+<script>window.__CHANGELOG__={"entries":[{"judul":"Cap waktu update terakhir dan tab Changelog","rincian":["Header menampilkan waktu update terakhir dashboard (WITA); footer ikut memakai waktu yang sama, bukan tanggal saat halaman dibuka.","Tab baru 28 Changelog berisi riwayat pembaruan, terbaru di atas."],"waktu":"2026-10-12T08:51"},{"waktu":"2026-10-12T08:09","pr":8,"judul":"Collection: data EGBIS Oktober (Billper UIC dan bundling, PraNPC running Oktober)","rincian":["Tabel belum bayar Billper per UIC Oktober: 424 SND, Rp 138,93 Jt; bundling Billper per pelanggan 9 SND.","Sub-tab PraNPC, baris PraNPC di Summary dan tren PraNPC memakai running Oktober posisi 10 Oktober (9,11%, 48 dari 527 SS WO).","Saldo Billper, Billdu/Biltri dan C3MR dicek ulang: sama persis dengan berkas EGBIS Oktober."]},{"waktu":"2026-10-12T05:44","pr":7,"judul":"Weekly Review: detail item WMS per segmen dan per HOTD","rincian":["Metrik WMS kini punya rekap AP per HOTD dan segmen serta daftar pelanggan PS, seperti tabel datin pada Bandwidth.","Sumber T_MONTH 11 Oktober 2026; total sama dengan Sales WMS (YTD Oktober 134 AP). WMS voucher wifi.id tidak termasuk hitungan."]},{"waktu":"2026-10-11T22:26","pr":6,"judul":"Collection: judul Summary menyebut posisi tiap indikator","rincian":["Billper dan C3MR posisi 10 Oktober, PraNPC, CR dan CYC closing September."]},{"waktu":"2026-10-11T21:52","pr":5,"judul":"Collection: tren bulanan Billper, C3MR dan Billdu sampai Oktober","rincian":["Titik Oktober (posisi 10 Oktober, belum closing) ditambahkan setelah closing September."]},{"waktu":"2026-10-11T21:02","pr":4,"judul":"Collection kembali ke format lama dengan angka posisi 10 Oktober","rincian":["Tombol Closing/Running dibuang; 5 kartu KPI dan summary lengkap seperti sebelumnya, angka diganti ke posisi terbaru."]},{"waktu":"2026-10-11T19:35","pr":3,"judul":"Update mingguan 11 Oktober 2026","rincian":["Sales HSI, WMS dan Bandwidth dari T_MONTH/T_ITEM 11 Oktober (Oktober berjalan).","Review Kontrak TR5 11 Oktober dan FNL26 dibangun ulang (WoW terhadap 4 Oktober).","Collection running Oktober dari deck posisi 10 Oktober."]},{"waktu":"2026-10-09T19:35","pr":2,"judul":"Update data 9 Oktober 2026","rincian":["Sales dari T_MONTH/T_ITEM 9 Oktober.","Collection closing September dari deck 3 Oktober.","Tab baru 27 Dashboard Unit berisi tautan dashboard BS, RSO, GS dan GS nasional."]},{"waktu":"2026-10-09T15:18","pr":1,"judul":"Revenue dibatasi sampai Agustus 2026","rincian":["Revenue September belum valid (masih outlook BP), tampilan Revenue dipotong sampai Agustus; master OneDrive disinkronkan."]},{"waktu":"2026-10-07T00:01","judul":"Pembaruan manual sebelum 9 Oktober","rincian":["Unggahan index.html langsung ke GitHub oleh pengelola dashboard: 7 Okt, 4 Okt, 27 Sep, 21 Sep, 7 Sep, 4 Sep, 31 Agu, 24 Agu, 11 Agu, 6 Agu, 4 Agu, 27 Jul, 24 Jul, 20 Jul, 18 Jul, 17 Jul, 10 Jul, 9 Jul dan 7 Jul 2026. Rincian perubahan tidak tercatat."]}],"updated":"2026-10-12T08:51"};</script>
+<script>
+/* v12OKT-CHLOG (arahan user 12 Okt 2026): cap waktu update terakhir di header dan footer, tab 28 Changelog. */
+(function(){
+  var CL=window.__CHANGELOG__||{entries:[]};
+  var BLN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  var HARI=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  function tgl(w,hari){if(!w)return "";var d=w.slice(0,10).split("-"),dt=new Date(+d[0],+d[1]-1,+d[2]);
+    return (hari?HARI[dt.getDay()]+", ":"")+(+d[2])+" "+BLN[+d[1]-1]+" "+d[0];}
+  function jam(w){return w&&w.length>=16?w.slice(11,13)+"."+w.slice(14,16)+" WITA":"";}
+  function esc3(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  var lab=CL.updated?tgl(CL.updated,true)+" pukul "+jam(CL.updated):"–";
+  window.updTerakhirTeks=function(){return lab;};
+  function pasang(){var u=document.getElementById("updTxt");if(u)u.textContent=lab;
+    var f=document.getElementById("foot");if(f&&/diperbarui /.test(f.innerHTML))f.innerHTML=f.innerHTML.replace(/diperbarui [^<]*/,"update terakhir "+esc3(lab)+" ");}
+  pasang();setTimeout(pasang,1500);
+  function renderChangelog(){
+    var tb=document.querySelector(".tabs"),cb=document.querySelector(".controls");
+    if(tb)tb.style.display="";if(cb)cb.style.display="none";
+    var grup={},urut=[];(CL.entries||[]).forEach(function(e){var k=(e.waktu||"").slice(0,10);if(!grup[k]){grup[k]=[];urut.push(k);}grup[k].push(e);});
+    var isi=urut.map(function(k){
+      return '<div class="panel" style="margin-top:14px"><div class="panel-b"><div style="font-weight:800;font-size:14.5px;color:var(--navy,#15324B)">'+esc3(tgl(k,true))+'</div>'
+        +grup[k].map(function(e){
+          return '<div style="border-left:3px solid #16a34a;padding:6px 0 6px 12px;margin-top:10px">'
+            +'<div style="font-size:12px;color:var(--muted)">'+esc3(jam(e.waktu))+(e.pr?' &middot; PR #'+esc3(e.pr):'')+'</div>'
+            +'<div style="font-weight:700;font-size:13.5px;margin-top:2px">'+esc3(e.judul)+'</div>'
+            +((e.rincian&&e.rincian.length)?'<ul style="margin:6px 0 0 18px;padding:0;font-size:12.5px;line-height:1.5">'+e.rincian.map(function(r){return '<li>'+esc3(r)+'</li>';}).join('')+'</ul>':'')
+            +'</div>';}).join('')
+        +'</div></div>';}).join('');
+    view.innerHTML='<div class="panel"><div class="panel-b"><div style="font-weight:700;font-size:16px">Changelog Dashboard SUMALUT</div>'
+      +'<div style="color:var(--muted);font-size:12.5px;margin-top:4px">Riwayat pembaruan data dan tampilan, terbaru di atas. Update terakhir: <b>'+esc3(lab)+'</b>.</div></div></div>'+isi;
+  }
+  if(typeof render!=="function")return;
+  var _render=render;
+  render=function(){
+    if(S.tab!=="changelog")return _render.apply(this,arguments);
+    try{if(typeof remopStop==="function")remopStop();if(typeof amShowStop==="function")amShowStop();if(typeof custShowStop==="function")custShowStop();}catch(e){}
+    renderChangelog();
   };
 })();
 </script>
